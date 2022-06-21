@@ -1,0 +1,42 @@
+<html>
+    <head>
+        <title>Register for The Con!</title>
+    </head>
+    <body>
+        <h1>The Con Registration</h1>
+        <form action="/register" method="POST">
+            <label for="legal_name">Legal Name:</label>
+            <input type="text" id="legal_name" required="true" onchange="update_price()"><br><br>
+
+            <label for="num_widgets">Number of Widgets:</label>
+            <input type="number" max="50" min="0" step="1" id="num_widgets" required="true" onchange="update_price()"><br><br>
+
+            <label for="birthdate">Birthday:</label>
+            <input type="date" id="birthdate" required="true" onchange="update_price()"><br><br>
+
+            <div id="price">Unknown</div>
+            <button type="submit">Register</button>
+        </form>
+
+        <script type="text/javascript">
+            widgetsEl = document.getElementById("num_widgets");
+            birthdateEl = document.getElementById("birthdate");
+            priceEl = document.getElementById("price");
+
+            async function update_price() {
+                const resp = await fetch("/price?" + new URLSearchParams({
+                    widgets: widgetsEl.value,
+                    birthdate: birthdateEl.value
+                }));
+                price = await resp.json();
+                priceEl.innerHTML = (price / 100).toLocaleString("en-US", {
+                    currencyDisplay: "symbol",
+                    style: "currency",
+                    currency: "USD"
+                });
+            }
+
+            update_price();
+        </script>
+    </body>
+</html>
